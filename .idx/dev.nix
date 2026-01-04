@@ -98,29 +98,22 @@
         -m 28672 \
         -smp 8 \
         \
-        # UEFI firmware
         -drive if=pflash,format=raw,readonly=on,file=$OVMF_CODE \
         -drive if=pflash,format=raw,file=$OVMF_VARS \
         \
-        # VirtIO disk
         -drive file="$RAW_DISK",format=qcow2,if=virtio,id=vdisk \
         -device virtio-blk-pci,drive=vdisk \
         \
-        # Windows ISO + VirtIO ISO as virtio CD-ROM
         -drive file="$WIN_ISO",media=cdrom,if=virtio,id=cd1 \
         -drive file="$VIRTIO_ISO",media=cdrom,if=virtio,id=cd2 \
         \
-        # Boot menu enabled
         -boot menu=on,order=cd \
         \
-        # Networking
         -netdev user,id=net0 \
         -device virtio-net-pci,netdev=net0 \
         \
-        # Video
         -device virtio-vga \
         \
-        # VNC for noVNC
         -vnc :0 \
         -display none \
         \
