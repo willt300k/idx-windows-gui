@@ -91,7 +91,7 @@
       if [ ! -f "$VIRTIO_ISO" ]; then
         echo "Downloading VirtIO drivers ISO..."
         wget -O "$VIRTIO_ISO" \
-          https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.271-1/virtio-win.iso
+          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/virtio-win-0.1.271.iso
       else
         echo "VirtIO ISO already exists, skipping download."
       fi
