@@ -39,6 +39,7 @@
       NOVNC_DIR="$HOME/noVNC"
 
       mkdir -p "$VM_DIR"
+      mkdir -p "$NOVNC_DIR"
 
       # =========================
       # Download Windows ISO
