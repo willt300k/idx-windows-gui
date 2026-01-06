@@ -72,12 +72,7 @@
       if [ "$SKIP_QCOW2_DOWNLOAD" -ne 1 ]; then
   if [ ! -f "$RAW_DISK" ]; then
     echo "Downloading QCOW2 disk..."
-    wget -O "$RAW_DISK"
   else
-    echo "QCOW2 disk already exists, skipping download."
-  fi
-else
-  echo "SKIP_QCOW2_DOWNLOAD=1 → QCOW2 logic skipped."
 fi
       
 
