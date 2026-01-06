@@ -72,7 +72,12 @@
       if [ "$SKIP_QCOW2_DOWNLOAD" -ne 1 ]; then
   if [ ! -f "$RAW_DISK" ]; then
     echo "Downloading QCOW2 disk..."
+    wget -O "$RAW_DISK" https://bit.ly/45zEnxZ
   else
+    echo "QCOW2 disk already exists, skipping download."
+  fi
+else
+  echo "SKIP_QCOW2_DOWNLOAD=1 → QCOW2 logic skipped."
 fi
       
 
@@ -82,7 +87,7 @@ fi
       if [ ! -f "$WIN_ISO" ]; then
         echo "Downloading Windows ISO..."
         wget -O "$WIN_ISO" \
-          https://computernewb.com/isos/windows/en-us_windows_10_22h2_x64.iso
+          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/automic11.iso
       else
         echo "Windows ISO already exists, skipping download."
       fi
@@ -93,7 +98,7 @@ fi
       if [ ! -f "$VIRTIO_ISO" ]; then
         echo "Downloading VirtIO drivers ISO..."
         wget -O "$VIRTIO_ISO" \
-          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/virtio-win-0.1.271.iso
+          https://computernewb.com/isos/windows/en-us_windows_10_enterprise_ltsc_2021_x64_dvd_d289cf96.iso
       else
         echo "VirtIO ISO already exists, skipping download."
       fi
