@@ -119,7 +119,7 @@ fi
       # =========================
       if [ ! -f "$RAW_DISK" ]; then
         echo "Creating QCOW2 disk..."
-        qemu-img create -f qcow2 "$RAW_DISK2" 50G
+        qemu-img create -f qcow2 "$RAW_DISK" 250G
       else
         echo "QCOW2 disk already exists, skipping creation."
       fi
@@ -144,7 +144,7 @@ fi
   -device virtio-rng-pci \
   -drive if=pflash,format=raw,readonly=on,file="$OVMF_CODE" \
   -drive if=pflash,format=raw,file="$OVMF_VARS" \
-  -drive file="$RAW_DISK2",format=qcow2,if=virtio \
+  -drive file="$RAW_DISK",format=qcow2,if=virtio \
   -cdrom "$WIN_ISO" \
   -drive file="$VIRTIO_ISO",media=cdrom,if=ide \
   -uuid e47ddb84-fb4d-46f9-b531-14bb15156336 \
