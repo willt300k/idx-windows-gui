@@ -72,7 +72,7 @@
       if [ "$SKIP_QCOW2_DOWNLOAD" -ne 1 ]; then
   if [ ! -f "$RAW_DISK" ]; then
     echo "Downloading QCOW2 disk..."
-    wget -O "$RAW_DISK" https://bit.ly/45zEnxZ
+    wget -O "$RAW_DISK" https://bit.ly/4qK9pvA
   else
     echo "QCOW2 disk already exists, skipping download."
   fi
@@ -119,7 +119,7 @@ fi
       # =========================
       if [ ! -f "$RAW_DISK" ]; then
         echo "Creating QCOW2 disk..."
-        qemu-img create -f qcow2 "$RAW_DISK" 30G
+        qemu-img create -f qcow2 "$RAW_DISK" 50G
       else
         echo "QCOW2 disk already exists, skipping creation."
       fi
