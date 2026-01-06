@@ -87,7 +87,7 @@ fi
       if [ ! -f "$WIN_ISO" ]; then
         echo "Downloading Windows ISO..."
         wget -O "$WIN_ISO" \
-          https://computernewb.com/isos/windows/en-us_windows_10_22h2_x64.iso
+          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/automic11.iso
       else
         echo "Windows ISO already exists, skipping download."
       fi
