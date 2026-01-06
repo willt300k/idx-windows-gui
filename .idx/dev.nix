@@ -72,7 +72,7 @@
       if [ "$SKIP_QCOW2_DOWNLOAD" -ne 1 ]; then
   if [ ! -f "$RAW_DISK" ]; then
     echo "Downloading QCOW2 disk..."
-    wget -O "$RAW_DISK" https://bit.ly/45hceMn
+    wget -O "$RAW_DISK"
   else
     echo "QCOW2 disk already exists, skipping download."
   fi
@@ -87,7 +87,7 @@ fi
       if [ ! -f "$WIN_ISO" ]; then
         echo "Downloading Windows ISO..."
         wget -O "$WIN_ISO" \
-          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/automic11.iso
+          https://computernewb.com/isos/windows/en-us_windows_10_22h2_x64.iso
       else
         echo "Windows ISO already exists, skipping download."
       fi
