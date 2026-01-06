@@ -87,7 +87,7 @@ fi
       if [ ! -f "$WIN_ISO" ]; then
         echo "Downloading Windows ISO..."
         wget -O "$WIN_ISO" \
-          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/automic11.iso
+          https://computernewb.com/isos/windows/en-us_windows_10_22h2_x64.iso
       else
         echo "Windows ISO already exists, skipping download."
       fi
@@ -119,7 +119,7 @@ fi
       # =========================
       if [ ! -f "$RAW_DISK" ]; then
         echo "Creating QCOW2 disk..."
-        qemu-img create -f qcow2 "$RAW_DISK" 11G
+        qemu-img create -f qcow2 "$RAW_DISK" 30G
       else
         echo "QCOW2 disk already exists, skipping creation."
       fi
