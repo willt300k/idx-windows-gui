@@ -117,9 +117,9 @@ fi
       # =========================
       # Create QCOW2 disk if missing
       # =========================
-      if [ ! -f "$RAW_DISK2" ]; then
+      if [ ! -f "$RAW_DISK" ]; then
         echo "Creating QCOW2 disk..."
-        qemu-img create -f qcow2 "$RAW_DISK" 50G
+        qemu-img create -f qcow2 "$RAW_DISK2" 50G
       else
         echo "QCOW2 disk already exists, skipping creation."
       fi
