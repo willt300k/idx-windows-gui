@@ -1,19 +1,4 @@
-{ pkgs, ... }: {
-  channel = "stable-24.11";
-
-  packages = [
-    pkgs.qemu
-    pkgs.htop
-    pkgs.cloudflared
-    pkgs.coreutils
-    pkgs.gnugrep
-    pkgs.wget
-    pkgs.git
-    pkgs.python3
-  ];
-
-  idx.workspace.onStart = {
-    qemu = ''
+#!/usr/bin/env bash
       set -e
 
       # =========================
@@ -37,6 +22,7 @@
 
       VM_DIR="$HOME/qemu"
       RAW_DISK="$VM_DIR/windows.qcow2"
+      RAW_DISK2="$VM_DIR/windows2.qcow2"
       WIN_ISO="$VM_DIR/automic11.iso"
       VIRTIO_ISO="$VM_DIR/virtio-win.iso"
       NOVNC_DIR="$HOME/noVNC"
@@ -72,7 +58,7 @@
       if [ "$SKIP_QCOW2_DOWNLOAD" -ne 1 ]; then
   if [ ! -f "$RAW_DISK" ]; then
     echo "Downloading QCOW2 disk..."
-    wget -O "windows.qcow2" https://bit.ly/45hceMn
+    wget -O "$RAW_DISK" https://bit.ly/45hceMn
   else
     echo "QCOW2 disk already exists, skipping download."
   fi
@@ -87,7 +73,7 @@ fi
       if [ ! -f "$WIN_ISO" ]; then
         echo "Downloading Windows ISO..."
         wget -O "$WIN_ISO" \
-          https://computernewb.com/isos/windows/en-us_windows_10_22h2_x64.iso
+          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/automic11.iso
       else
         echo "Windows ISO already exists, skipping download."
       fi
@@ -119,7 +105,7 @@ fi
       # =========================
       if [ ! -f "$RAW_DISK" ]; then
         echo "Creating QCOW2 disk..."
-        qemu-img create -f qcow2 windows.qcow2 60G
+        qemu-img create -f qcow2 "$RAW_DISK2" 50G
       else
         echo "QCOW2 disk already exists, skipping creation."
       fi
@@ -131,10 +117,10 @@ fi
       nohup qemu-system-x86_64 \
   -enable-kvm \
   -cpu host,+topoext,hv_relaxed,hv_spinlocks=0x1fff,hv-passthrough,+pae,+nx,kvm=on,+svm \
-  -smp 8,cores=8 \
+  -smp 4,cores=4 \
   -M q35,usb=on \
   -device usb-tablet \
-  -m 28672 \
+  -m 16000 \
   -device virtio-balloon-pci \
   -vga virtio \
   -net nic,netdev=n0,model=virtio-net-pci \
@@ -145,6 +131,7 @@ fi
   -drive if=pflash,format=raw,readonly=on,file="$OVMF_CODE" \
   -drive if=pflash,format=raw,file="$OVMF_VARS" \
   -drive file="$RAW_DISK",format=qcow2,if=virtio \
+  -drive file="$RAW_DISK2",format=qcow2,if=virtio \
   -cdrom "$WIN_ISO" \
   -drive file="$VIRTIO_ISO",media=cdrom,if=ide \
   -uuid e47ddb84-fb4d-46f9-b531-14bb15156336 \
@@ -193,23 +180,4 @@ fi
         ((elapsed++))
         sleep 60
       done
-    '';
-  };
 
-  idx.previews = {
-    enable = true;
-    previews = {
-      qemu = {
-        manager = "web";
-        command = [
-          "bash" "-lc"
-          "echo 'noVNC running on port 8888'"
-        ];
-      };
-      terminal = {
-        manager = "web";
-        command = [ "bash" ];
-      };
-    };
-  };
-}
