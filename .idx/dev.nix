@@ -1,4 +1,19 @@
-#!/usr/bin/env bash
+{ pkgs, ... }: {
+  channel = "stable-24.11";
+
+  packages = [
+    pkgs.qemu
+    pkgs.htop
+    pkgs.cloudflared
+    pkgs.coreutils
+    pkgs.gnugrep
+    pkgs.wget
+    pkgs.git
+    pkgs.python3
+  ];
+
+  idx.workspace.onStart = {
+    qemu = ''
       set -e
 
       # =========================
@@ -26,7 +41,6 @@
       WIN_ISO="$VM_DIR/automic11.iso"
       VIRTIO_ISO="$VM_DIR/virtio-win.iso"
       NOVNC_DIR="$HOME/noVNC"
-
      
      OVMF_DIR="$HOME/qemu/ovmf"
      OVMF_CODE="$OVMF_DIR/OVMF_CODE.fd"
@@ -117,10 +131,10 @@ fi
       nohup qemu-system-x86_64 \
   -enable-kvm \
   -cpu host,+topoext,hv_relaxed,hv_spinlocks=0x1fff,hv-passthrough,+pae,+nx,kvm=on,+svm \
-  -smp 4,cores=4 \
+  -smp 8,cores=8 \
   -M q35,usb=on \
   -device usb-tablet \
-  -m 16000 \
+  -m 28672 \
   -device virtio-balloon-pci \
   -vga virtio \
   -net nic,netdev=n0,model=virtio-net-pci \
@@ -180,4 +194,23 @@ fi
         ((elapsed++))
         sleep 60
       done
+    '';
+  };
 
+  idx.previews = {
+    enable = true;
+    previews = {
+      qemu = {
+        manager = "web";
+        command = [
+          "bash" "-lc"
+          "echo 'noVNC running on port 8888'"
+        ];
+      };
+      terminal = {
+        manager = "web";
+        command = [ "bash" ];
+      };
+    };
+  };
+}
