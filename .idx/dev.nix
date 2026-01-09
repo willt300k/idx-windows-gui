@@ -1,54 +1,3 @@
-lsb_release -cd  ; getconf LONG_BIT ; hostname ; hostname -I
-sudo apt install xfce4 xfce4-goodies tightvncserver novnc websockify python3-numpy build-essential net-tools curl git software-properties-common -y
-vncserver
-vncserver -kill :1
-mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
-nano ~/.vnc/xstartup
-#!/bin/bash
-xrdb $HOME/.Xresources
-startxfce4 &
-chmod +x ~/.vnc/xstartup
-vncserver
-vncpasswd  [ StrongPassword ]
-
-cd /etc/ssl ; openssl req -x509 -nodes -newkey rsa:2048 -keyout novnc.pem -out novnc.pem -days 365
-chmod 644 novnc.pem
-websockify -D --web=/usr/share/novnc/ --cert=/etc/ssl/novnc.pem 6080 localhost:5901
-https://192.168.1.50:6080/vnc.html
-------------------
-1: wget -O bios64.bin "https://github.com/BlankOn/ovmf-blobs..."
-2 : wget -O win.iso "https://pixeldrain.com/u/9Bq1Z2NF"
-3 : wget -O ngrok.tgz "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz"
-4 : tar -xf ngrok.tgz
-5 : rm -rf ngrok.tgz
-6 : ./ngrok config add-authtoken 2coWZi6lp6Yvn7QmBhG8Z7Bqc32_2NMWmXTdrGrUxPncJF8sr
-7 : ./ngrok tcp 5900
-8 : sudo apt update
-9 : sudo apt install qemu-kvm -y
-10 : qemu-img create -f raw win.img
-11 : qemu-img create -f raw win.img 32G
-12 :sudo qemu-system-x86_64 -m 4G -cpu host -boot order=c -drive file=win.iso,media=cdrom -drive file=disk.qcow2,format=raw -device usb-ehci,id=usb,bus=pci.0,addr=0x4 -device usb-tablet -vnc :0 -smp cores=4 -device rtl8139,netdev=n0 -netdev user,id=n0 -vga qxl -bios bios64.bin
--------------------
-git clone https://github.com/foxytouxxx/freeroot.git
-cd freeroot
-bash root.sh
-apt update
-apt install qemu-kvm -y wget -y
-wget -O win.iso https://st7.ranoz.gg/pzkKzkEo-AtomOS11%2025h2%20Lite%20006.iso
-qemu-img create -f qcow2 disk.qcow2 50G
-wget -O "disk.qcow2" https://bit.ly/4qK9pvA
------------------
-qemu-system-x86_64 -M q35 -usb -device qemu-xhci -device usb-tablet -device usb-kbd -cpu qemu64,+sse,+sse2,+sse4.1,+sse4.2,+pae,hv-relaxed -smp sockets=1,cores=2,threads=1 -m 4082M -drive file=disk.qcow2,aio=threads,cache=writeback,if=none,id=hda -device ahci,id=hdaahci -device ide-hd,drive=hda,bus=hdaahci.0 -drive file=win.iso,media=cdrom,if=none,id=cdrom0 -device ide-cd,drive=cdrom0,bus=ide.0 -vga qxl -device ich9-intel-hda -device hda-duplex -device e1000e,netdev=n0 -netdev user,id=n0 -accel tcg,thread=multi -boot d,menu=on -device intel-iommu -vnc :0
-
-qemu-system-x86_64 -smp sockets=1,cores=2,threads=1 -hda disk.qcow2 -m 4096 -vga qxl -display vnc=:0
-
----------------
-curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null
-echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | sudo tee /etc/apt/sources.list.d/playit-cloud.list
-sudo apt update
-sudo apt install playit
-docker run --rm -d --network host --privileged --name nomachine-xfce4 -e PASSWORD=123456 -e USER=user --cap-add=SYS_PTRACE --shm-size=1g thuonghai2711/nomachine-ubuntu-desktop:wine
---------------
 { pkgs, ... }: {
   channel = "stable-24.11";
 
@@ -123,7 +72,7 @@ docker run --rm -d --network host --privileged --name nomachine-xfce4 -e PASSWOR
       if [ "$SKIP_QCOW2_DOWNLOAD" -ne 1 ]; then
   if [ ! -f "$RAW_DISK" ]; then
     echo "Downloading QCOW2 disk..."
-    wget -O "$RAW_DISK" https://bit.ly/45hceMn
+    wget -O "windows.qcow2" https://bit.ly/45hceMn
   else
     echo "QCOW2 disk already exists, skipping download."
   fi
@@ -195,7 +144,7 @@ fi
   -device virtio-rng-pci \
   -drive if=pflash,format=raw,readonly=on,file="$OVMF_CODE" \
   -drive if=pflash,format=raw,file="$OVMF_VARS" \
-  -drive file=windows.qcow2,format=qcow2,if=virtio \
+  -drive file="$RAW_DISK",format=qcow2,if=virtio \
   -cdrom "$WIN_ISO" \
   -drive file="$VIRTIO_ISO",media=cdrom,if=ide \
   -uuid e47ddb84-fb4d-46f9-b531-14bb15156336 \
