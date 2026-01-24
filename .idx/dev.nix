@@ -37,10 +37,10 @@
 
       VM_DIR="$HOME/qemu"
       RAW_DISK="$VM_DIR/windows.qcow2"
-      RAW_DISK2="$VM_DIR/windows2.qcow2"
       WIN_ISO="$VM_DIR/automic11.iso"
       VIRTIO_ISO="$VM_DIR/virtio-win.iso"
       NOVNC_DIR="$HOME/noVNC"
+
      
      OVMF_DIR="$HOME/qemu/ovmf"
      OVMF_CODE="$OVMF_DIR/OVMF_CODE.fd"
@@ -87,7 +87,7 @@ fi
       if [ ! -f "$WIN_ISO" ]; then
         echo "Downloading Windows ISO..."
         wget -O "$WIN_ISO" \
-          https://github.com/kmille36/idx-windows-gui/releases/download/1.0/automic11.iso
+          https://computernewb.com/isos/windows/Windows%207%20SP1%20x64.iso
       else
         echo "Windows ISO already exists, skipping download."
       fi
@@ -117,9 +117,9 @@ fi
       # =========================
       # Create QCOW2 disk if missing
       # =========================
-      if [ ! -f "$RAW_DISK2" ]; then
+      if [ ! -f "$RAW_DISK" ]; then
         echo "Creating QCOW2 disk..."
-        qemu-img create -f qcow2 "$RAW_DISK2" 50G
+        qemu-img create -f qcow2 "$RAW_DISK" 11G
       else
         echo "QCOW2 disk already exists, skipping creation."
       fi
@@ -130,11 +130,11 @@ fi
       echo "Starting QEMU..."
       nohup qemu-system-x86_64 \
   -enable-kvm \
-  -cpu host,+topoext,hv_relaxed,hv_spinlocks=0x1fff,hv-passthrough,+pae,+nx,kvm=on,+svm \
-  -smp 8,cores=8 \
+  -cpu host,hv_relaxed,hv_spinlocks=0x1fff,hv_vapic,hv_time \
+  -smp 4,cores=4 \
   -M q35,usb=on \
   -device usb-tablet \
-  -m 28672 \
+  -m 12048 \
   -device virtio-balloon-pci \
   -vga virtio \
   -net nic,netdev=n0,model=virtio-net-pci \
@@ -145,12 +145,11 @@ fi
   -drive if=pflash,format=raw,readonly=on,file="$OVMF_CODE" \
   -drive if=pflash,format=raw,file="$OVMF_VARS" \
   -drive file="$RAW_DISK",format=qcow2,if=virtio \
-  -drive file="$RAW_DISK2",format=qcow2,if=virtio \
   -cdrom "$WIN_ISO" \
   -drive file="$VIRTIO_ISO",media=cdrom,if=ide \
   -uuid e47ddb84-fb4d-46f9-b531-14bb15156336 \
   -vnc :0 \
-  -display none \
+  -display sdl \
   > /tmp/qemu.log 2>&1 &
 
 
